@@ -36,13 +36,12 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
         .allowedOriginPatterns(
-            "http://localhost:5173",
-            "https://plant-management-frontend-m7hg.onrender.com"
+                "http://localhost:5173",
+                "https://plant-management-frontend-m7hg.onrender.com"
         )
         .allowedMethods("*")
         .allowedHeaders("*")
         .allowCredentials(true);
-            }
         };
     }
 }
