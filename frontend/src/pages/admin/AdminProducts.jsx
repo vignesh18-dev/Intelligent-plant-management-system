@@ -5,7 +5,7 @@ export default function AdminProducts() {
   const [editProduct, setEditProduct] = useState(null);
 
   const fetchProducts = () => {
-    fetch("http://localhost:8080/api/plants")
+    fetch("https://plant-management-app-0jp3.onrender.com/api/plants")
       .then((res) => res.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch((err) => console.error(err));
@@ -16,7 +16,7 @@ export default function AdminProducts() {
   }, []);
 
   const deleteProduct = (id) => {
-    fetch(`http://localhost:8080/api/plants/admin/delete/${id}`, {
+    fetch(`https://plant-management-app-0jp3.onrender.com/api/plants/admin/delete/${id}`, {
       method: "DELETE",
     }).then(() => fetchProducts());
   };
@@ -25,7 +25,7 @@ export default function AdminProducts() {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    fetch(`http://localhost:8080/api/plants/admin/update/${editProduct.id}`, {
+    fetch(`https://plant-management-app-0jp3.onrender.com/api/plants/admin/update/${editProduct.id}`, {
       method: "PUT",
       body: formData,
     })

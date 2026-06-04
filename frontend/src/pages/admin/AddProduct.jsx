@@ -28,7 +28,7 @@ export default function AddProduct() {
       fd.append("price", form.price);
       if (image) fd.append("image", image);
 
-      const res = await fetch("http://localhost:8080/api/plants/add", {
+      const res = await fetch("https://plant-management-app-0jp3.onrender.com/api/plants/add", {
         method: "POST",
         body: fd
       });

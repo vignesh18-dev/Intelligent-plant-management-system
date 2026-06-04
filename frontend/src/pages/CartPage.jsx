@@ -15,7 +15,7 @@ export default function CartPage() {
   // Load cart from backend
   const loadCart = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/api/cart/${userId}`);
+      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}`);
       const data = await res.json();
 
       setCart(data);

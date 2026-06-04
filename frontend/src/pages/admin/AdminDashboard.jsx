@@ -16,15 +16,15 @@ export default function AdminDashboard() {
 
   const loadCounts = async () => {
     try {
-      const plantsRes = await fetch("http://localhost:8080/api/plants");
+      const plantsRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/plants");
       const plantsData = await plantsRes.json();
       setPlantsCount(plantsData.length);
 
-      const ordersRes = await fetch("http://localhost:8080/api/orders/admin/all");
+      const ordersRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/orders/admin/all");
       const ordersData = await ordersRes.json();
       setOrdersCount(ordersData.length);
 
-      const usersRes = await fetch("http://localhost:8080/api/auth/all");
+      const usersRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/auth/all");
       const usersData = await usersRes.json();
       setUsersCount(usersData.length);
 
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   };
 
   const loadLatestOrders = async () => {
-    const res = await fetch("http://localhost:8080/api/orders/admin/all");
+    const res = await fetch("https://plant-management-app-0jp3.onrender.com/api/orders/admin/all");
     const data = await res.json();
     setLatestOrders(data.slice(-5).reverse());
   };

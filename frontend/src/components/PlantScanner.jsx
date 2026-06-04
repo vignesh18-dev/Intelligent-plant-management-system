@@ -33,7 +33,7 @@ export default function PlantScanner() {
     formData.append("file", image);
 
     try {
-      const res = await axios.post("http://localhost:8080/plant/scan", formData, {
+      const res = await axios.post("https://plant-management-app-0jp3.onrender.com/plant/scan", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

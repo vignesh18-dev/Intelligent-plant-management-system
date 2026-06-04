@@ -11,7 +11,7 @@ export default function Plants() {
     const uid = localStorage.getItem("userId");
     setUserId(uid);
 
-    fetch("http://localhost:8080/api/plants")
+    fetch("https://plant-management-app-0jp3.onrender.com/api/plants")
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);
