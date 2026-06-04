@@ -35,10 +35,13 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:5173")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+        .allowedOriginPatterns(
+            "http://localhost:5173",
+            "https://plant-management-frontend-m7hg.onrender.com"
+        )
+        .allowedMethods("*")
+        .allowedHeaders("*")
+        .allowCredentials(true);
             }
         };
     }
