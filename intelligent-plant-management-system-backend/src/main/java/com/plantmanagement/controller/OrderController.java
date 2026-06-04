@@ -14,7 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://plant-management-frontend-m7hg.onrender.com"
+})
 public class OrderController {
 
     private final OrderService service;

@@ -9,7 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://plant-management-frontend-m7hg.onrender.com"
+})
 public class CartController {
 
     private final CartService cartService;

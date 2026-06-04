@@ -9,7 +9,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173") // for your React app
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://plant-management-frontend-m7hg.onrender.com"
+}) // for your React app
 public class AuthController {
 
     private final UserRepository userRepository;

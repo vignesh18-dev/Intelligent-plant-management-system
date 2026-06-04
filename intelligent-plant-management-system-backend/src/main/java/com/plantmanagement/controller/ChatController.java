@@ -11,7 +11,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://plant-management-frontend-m7hg.onrender.com"
+})
 public class ChatController {
 
     @Value("${gemini.api.key}")

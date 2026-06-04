@@ -12,7 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/plants")
-@CrossOrigin(origins = "http://localhost:5173") // adapt origins if needed
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://plant-management-frontend-m7hg.onrender.com"
+})// adapt origins if needed
 public class PlantController {
 
     private final PlantService plantService;
