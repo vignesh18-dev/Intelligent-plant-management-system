@@ -21,7 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/plants/**").permitAll()
                         .requestMatchers("/api/cart/**").permitAll()
-                        .requestMatchers("/api/orders/**").permitAll()     // ✅ Added Order API access
+                        .requestMatchers("/api/orders/**").permitAll()
                         .requestMatchers("/chat/**").permitAll()
                         .anyRequest().permitAll()
                 );
@@ -35,13 +35,14 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-        .allowedOriginPatterns(
-                "http://localhost:5173",
-                "https://plant-management-frontend-m7hg.onrender.com"
-        )
-        .allowedMethods("*")
-        .allowedHeaders("*")
-        .allowCredentials(true);
+                        .allowedOriginPatterns(
+                                "http://localhost:5173",
+                                "https://plant-management-frontend-m7hg.onrender.com"
+                        )
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
         };
     }
 }
