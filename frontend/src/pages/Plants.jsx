@@ -8,8 +8,9 @@ export default function Plants() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const uid = localStorage.getItem("userId");
-    setUserId(uid);
+    // Get logged in user from localStorage
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUserId(user?.userId);
 
     fetch("https://plant-management-app-0jp3.onrender.com/api/plants")
       .then((res) => res.json())
@@ -23,27 +24,35 @@ export default function Plants() {
       });
   }, []);
 
-  // 🛒 Add to Cart using backend API
+  // 🛒 Add to Cart
   const handleAddToCart = async (plant) => {
     if (!userId) {
       alert("Please login first!");
-      navigate("/login");
+      navigate("/"); // login page
       return;
     }
 
     try {
-      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          plantId: plant.id,
-          plantName: plant.name,
-          price: plant.price,
-          quantity: 1,
-        }),
-      });
+      const res = await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            plantId: plant.id,
+            plantName: plant.name,
+            price: plant.price,
+            quantity: 1,
+          }),
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to add item to cart");
+      if (!res.ok) {
+        throw new Error("Failed to add item to cart");
+      }
+
       alert(`${plant.name} added to cart!`);
     } catch (err) {
       console.error("Error adding to cart:", err);
@@ -51,27 +60,35 @@ export default function Plants() {
     }
   };
 
-  // ⚡ Order Now — adds item to cart & redirects to cart page
+  // ⚡ Order Now
   const handleOrderNow = async (plant) => {
     if (!userId) {
       alert("Please login first!");
-      navigate("/login");
+      navigate("/"); // login page
       return;
     }
 
     try {
-      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          plantId: plant.id,
-          plantName: plant.name,
-          price: plant.price,
-          quantity: 1,
-        }),
-      });
+      const res = await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            plantId: plant.id,
+            plantName: plant.name,
+            price: plant.price,
+            quantity: 1,
+          }),
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to process order");
+      if (!res.ok) {
+        throw new Error("Failed to process order");
+      }
+
       navigate("/cart");
     } catch (err) {
       console.error("Error placing order:", err);
@@ -79,7 +96,9 @@ export default function Plants() {
     }
   };
 
-  if (loading) return <h2 className="loading">Loading plants...</h2>;
+  if (loading) {
+    return <h2 className="loading">Loading plants...</h2>;
+  }
 
   return (
     <div className="plants-container">
@@ -98,11 +117,17 @@ export default function Plants() {
             <p className="price">₹{p.price}</p>
             <p className="desc">{p.description}</p>
 
-            <button className="cart-btn" onClick={() => handleAddToCart(p)}>
+            <button
+              className="cart-btn"
+              onClick={() => handleAddToCart(p)}
+            >
               🛒 Add to Cart
             </button>
 
-            <button className="order-btn" onClick={() => handleOrderNow(p)}>
+            <button
+              className="order-btn"
+              onClick={() => handleOrderNow(p)}
+            >
               ⚡ Order Now
             </button>
           </div>
