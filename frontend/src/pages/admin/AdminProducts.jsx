@@ -43,7 +43,7 @@ export default function AdminProducts() {
       <div className="product-list">
         {products.map((p) => (
           <div className="product-card" key={p.id}>
-            <img src={`http://localhost:8080${p.imageUrl}`} alt={p.name} />
+            <img src={`https://plant-management-app-0jp3.onrender.com${p.imageUrl}`} alt={p.name} />
             <h3>{p.name}</h3>
             <p>{p.description}</p>
             <span>₹{p.price}</span>

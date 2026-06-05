@@ -7,7 +7,7 @@ export default function CartPage() {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?.userId;
+const userId = user?.userId;
 
   useEffect(() => {
     loadCart();

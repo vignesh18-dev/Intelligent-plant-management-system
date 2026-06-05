@@ -32,7 +32,7 @@ export default function Plants() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8080/api/cart/${userId}/add`, {
+      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -60,7 +60,7 @@ export default function Plants() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8080/api/cart/${userId}/add`, {
+      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,7 +89,7 @@ export default function Plants() {
         {plants.map((p) => (
           <div className="plant-card" key={p.id}>
             <img
-              src={`http://localhost:8080${p.imageUrl}`}
+              src={`https://plant-management-app-0jp3.onrender.com${p.imageUrl}`}
               alt={p.name}
               className="plant-img"
             />
