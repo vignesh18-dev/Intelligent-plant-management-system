@@ -6,59 +6,88 @@ export default function CartPage() {
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem("userId");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.userId;
 
   useEffect(() => {
     loadCart();
   }, []);
 
-  // Load cart from backend
   const loadCart = async () => {
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+
     try {
-      const res = await fetch(`https://plant-management-app-0jp3.onrender.com/api/cart/${userId}`);
+      const res = await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/${userId}`
+      );
+
       const data = await res.json();
 
-      setCart(data);
-      calculateTotal(data);
+      const cartItems = Array.isArray(data) ? data : [];
+
+      setCart(cartItems);
+      calculateTotal(cartItems);
     } catch (err) {
       console.error("Error loading cart:", err);
     }
   };
 
-  // Calculate price total
   const calculateTotal = (items) => {
     let sum = 0;
-    items.forEach((item) => (sum += item.price * item.quantity));
+
+    items.forEach((item) => {
+      sum += Number(item.price) * Number(item.quantity);
+    });
+
     setTotal(sum);
   };
 
-  // Update quantity — backend requires body
   const updateQuantity = async (itemId, newQty) => {
     if (newQty < 1) return;
 
-    await fetch(`http://localhost:8080/api/cart/update/${itemId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantity: newQty }),
-    });
+    try {
+      await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/update/${itemId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quantity: newQty,
+          }),
+        }
+      );
 
-    loadCart();
+      loadCart();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Remove item
   const removeItem = async (itemId) => {
-    await fetch(`http://localhost:8080/api/cart/remove/${itemId}`, {
-      method: "DELETE",
-    });
-    loadCart();
+    try {
+      await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/remove/${itemId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      loadCart();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // ⚡ Place order
   const handleOrderNow = async () => {
     if (cart.length === 0) return;
 
     const orderData = {
-      userId: userId,
+      userId,
       items: cart.map((item) => ({
         plantId: item.plantId,
         quantity: item.quantity,
@@ -68,20 +97,29 @@ export default function CartPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/orders/place", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
+      const res = await fetch(
+        "https://plant-management-app-0jp3.onrender.com/api/orders/place",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to place order");
+      if (!res.ok) {
+        throw new Error("Failed to place order");
+      }
 
       alert("🎉 Order placed successfully!");
 
-      // Clear cart in backend
-      await fetch(`http://localhost:8080/api/cart/clear/${userId}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/cart/clear/${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       navigate("/orders");
     } catch (err) {
@@ -94,17 +132,15 @@ export default function CartPage() {
       <h2 className="cart-title">🛒 Your Cart</h2>
 
       <div className="cart-flex">
-        {/* LEFT ITEMS */}
         <div className="cart-items">
           {cart.length === 0 ? (
             <p className="empty-cart">Your cart is empty.</p>
           ) : (
             cart.map((item) => (
               <div className="cart-card" key={item.id}>
-                {/* Show plant image only if available */}
                 {item.imageUrl && (
                   <img
-                    src={`http://localhost:8080${item.imageUrl}`}
+                    src={`https://plant-management-app-0jp3.onrender.com${item.imageUrl}`}
                     alt={item.plantName}
                   />
                 )}
@@ -115,13 +151,19 @@ export default function CartPage() {
 
                   <div className="qty-box">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity - 1)
+                      }
                     >
                       -
                     </button>
+
                     <span>{item.quantity}</span>
+
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity + 1)
+                      }
                     >
                       +
                     </button>
@@ -139,7 +181,6 @@ export default function CartPage() {
           )}
         </div>
 
-        {/* RIGHT SUMMARY */}
         <div className="cart-summary">
           <h3>Order Summary</h3>
           <p className="summary-total">Total: ₹{total}</p>
