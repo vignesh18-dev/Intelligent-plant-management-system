@@ -13,23 +13,27 @@ import Register from "./pages/Register";
 import ChatBot from "./components/ChatBot";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import AdminHome from "./pages/AdminHome";
 import AddProduct from "./pages/admin/AddProduct";
 import AdminProducts from "./pages/admin/AdminProducts";
-import PlantScannerPage from "./pages/PlantScannerPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
+
+import PlantScannerPage from "./pages/PlantScannerPage";
 
 export default function App() {
   return (
     <AuthProvider>
       <Navbar />
-      <Routes>
-        {/* Public */}
-        <Route path="/" element={<Login />} />
-<Route path="/login" element={<Login />} />
-<Route path="/register" element={<Register />} />
 
-        {/* Protected */}
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* User Routes */}
         <Route
           path="/home"
           element={
@@ -38,6 +42,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/plants"
           element={
@@ -46,6 +51,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/product/:id"
           element={
@@ -54,6 +60,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/cart"
           element={
@@ -62,6 +69,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/orders"
           element={
@@ -70,6 +78,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/dashboard"
           element={
@@ -78,13 +87,17 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Admin Routes */}
         <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/addproduct" element={<AddProduct />} />
-        <Route path="/admin/adminproduct" element={<AdminProducts/>} />
+        <Route path="/admin/adminproduct" element={<AdminProducts />} />
         <Route path="/admin/admindashboard" element={<AdminDashboard />} />
-        <Route path="/scan" element={<PlantScannerPage/>} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
+
+        {/* Plant Scanner */}
+        <Route path="/scan" element={<PlantScannerPage />} />
       </Routes>
-      
 
       <Footer />
       <ChatBot />

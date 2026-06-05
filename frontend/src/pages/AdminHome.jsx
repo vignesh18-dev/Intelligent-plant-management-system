@@ -1,13 +1,13 @@
 import React from "react";
 
-
 export default function AdminHome() {
-  const user = JSON.parse(localStorage.getItem("user")); // get logged-in admin details
+  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <div className="admin-home">
       <div className="admin-card">
         <h1>🌱 Admin Dashboard</h1>
+
         <h2>Welcome, {user?.username || "Admin"} 👋</h2>
 
         <p className="admin-subtext">
@@ -15,10 +15,21 @@ export default function AdminHome() {
         </p>
 
         <div className="admin-actions">
-          <a href="/admin/addproduct" className="admin-btn">➕ Add Product</a>
-          <a href="/admin/adminproduct" className="admin-btn">Admin Product</a>
-          <a href="/admin/admindashboard" className="admin-btn">📊 View Dashboard</a>
-          <a href="/orders" className="admin-btn">📦 View Orders</a>
+          <a href="/admin/addproduct" className="admin-btn">
+            ➕ Add Product
+          </a>
+
+          <a href="/admin/adminproduct" className="admin-btn">
+            🌿 Manage Products
+          </a>
+
+          <a href="/admin/admindashboard" className="admin-btn">
+            📊 View Dashboard
+          </a>
+
+          <a href="/admin/orders" className="admin-btn">
+            📦 View Orders
+          </a>
         </div>
       </div>
     </div>

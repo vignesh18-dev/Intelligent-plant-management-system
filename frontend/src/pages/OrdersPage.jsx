@@ -4,45 +4,25 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    loadSampleOrders();
+    loadOrders();
   }, []);
 
-  const loadSampleOrders = () => {
-    // 🌸 SAMPLE FLOWER / PLANT ORDER DATA
-    const sampleData = [
-      {
-        id: 101,
-        userId: 6,
-        orderDate: "2025-02-10T12:00:00",
-        totalPrice: 499,
-        status: "Delivered",
-        items: [
-          {
-            plantId: 1,
-            name: "Rose Plant",
-            quantity: 1,
-            price: 499
-          }
-        ]
-      },
-      {
-        id: 102,
-        userId: 6,
-        orderDate: "2025-02-12T09:30:00",
-        totalPrice: 899,
-        status: "Delivered",
-        items: [
-          {
-            plantId: 2,
-            name: "Orchid Flower Plant",
-            quantity: 1,
-            price: 899
-          }
-        ]
-      }
-    ];
+  const loadOrders = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    setOrders(sampleData);
+      if (!user?.userId) return;
+
+      const res = await fetch(
+        `https://plant-management-app-0jp3.onrender.com/api/orders/user/${user.userId}`
+      );
+
+      const data = await res.json();
+
+      setOrders(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error loading orders:", err);
+    }
   };
 
   return (
@@ -57,20 +37,22 @@ export default function OrdersPage() {
             <div className="order-card" key={order.id}>
               <h3>Order #{order.id}</h3>
 
-              <p className="order-date">
-                📅 Placed on:{" "}
-                {new Date(order.orderDate).toLocaleDateString()}
-              </p>
+              <p>👤 User ID: {order.userId}</p>
 
-              <p className="order-total">💰 Total Amount: ₹{order.totalPrice}</p>
+              <p>💰 Total Amount: ₹{order.totalPrice}</p>
 
-              <p className="status delivered">✔ {order.status}</p>
+              <p>📌 Status: {order.status}</p>
 
               <h4>Items:</h4>
+
               <ul>
-                {order.items.map((item, idx) => (
+                {order.items?.map((item, idx) => (
                   <li key={idx}>
-                    🌿 {item.name} — {item.quantity} × ₹{item.price}
+                    🌿 Plant #{item.plantId}
+                    {" - "}
+                    Qty: {item.quantity}
+                    {" - "}
+                    ₹{item.price}
                   </li>
                 ))}
               </ul>

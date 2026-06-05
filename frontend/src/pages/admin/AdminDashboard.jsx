@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function AdminDashboard() {
   const [plantsCount, setPlantsCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
   const [latestOrders, setLatestOrders] = useState([]);
 
   const navigate = useNavigate();
@@ -16,34 +15,40 @@ export default function AdminDashboard() {
 
   const loadCounts = async () => {
     try {
-      const plantsRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/plants");
+      const plantsRes = await fetch(
+        "https://plant-management-app-0jp3.onrender.com/api/plants"
+      );
       const plantsData = await plantsRes.json();
       setPlantsCount(plantsData.length);
 
-      const ordersRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/orders/admin/all");
+      const ordersRes = await fetch(
+        "https://plant-management-app-0jp3.onrender.com/api/orders/admin/all"
+      );
       const ordersData = await ordersRes.json();
       setOrdersCount(ordersData.length);
-
-      const usersRes = await fetch("https://plant-management-app-0jp3.onrender.com/api/auth/all");
-      const usersData = await usersRes.json();
-      setUsersCount(usersData.length);
-
     } catch (error) {
       console.error("Error loading dashboard data:", error);
     }
   };
 
   const loadLatestOrders = async () => {
-    const res = await fetch("https://plant-management-app-0jp3.onrender.com/api/orders/admin/all");
-    const data = await res.json();
-    setLatestOrders(data.slice(-5).reverse());
+    try {
+      const res = await fetch(
+        "https://plant-management-app-0jp3.onrender.com/api/orders/admin/all"
+      );
+
+      const data = await res.json();
+
+      setLatestOrders(Array.isArray(data) ? data.slice(-5).reverse() : []);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="admin-dashboard">
       <h2 className="dashboard-title">📊 Admin Dashboard</h2>
 
-      {/* Top Cards Section */}
       <div className="dashboard-cards">
         <div className="dash-card plants">
           <h3>{plantsCount}</h3>
@@ -54,14 +59,8 @@ export default function AdminDashboard() {
           <h3>{ordersCount}</h3>
           <p>Total Orders</p>
         </div>
-
-        <div className="dash-card users">
-          <h3>{usersCount}</h3>
-          <p>Total Users</p>
-        </div>
       </div>
 
-      {/* Latest Orders */}
       <div className="latest-orders">
         <h3>🧾 Latest Orders</h3>
 
@@ -74,7 +73,7 @@ export default function AdminDashboard() {
                 <th>Order ID</th>
                 <th>User ID</th>
                 <th>Total Price</th>
-                <th>Items</th>
+                <th>Status</th>
               </tr>
             </thead>
 
@@ -84,7 +83,7 @@ export default function AdminDashboard() {
                   <td>{order.id}</td>
                   <td>{order.userId}</td>
                   <td>₹{order.totalPrice}</td>
-                  <td>{order.items.length}</td>
+                  <td>{order.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -92,12 +91,18 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* Manage Buttons */}
       <div className="dashboard-actions">
-        <button className="dash-btn" onClick={() => navigate("/admin/products")}>
+        <button
+          className="dash-btn"
+          onClick={() => navigate("/admin/adminproduct")}
+        >
           🌱 Manage Products
         </button>
-        <button className="dash-btn" onClick={() => navigate("/admin/orders")}>
+
+        <button
+          className="dash-btn"
+          onClick={() => navigate("/admin/orders")}
+        >
           📦 View All Orders
         </button>
       </div>
