@@ -17,7 +17,7 @@ import java.util.Map;
 })
 public class PlantScanController {
 
-    @Value("${XAI_API_KEY}")
+    @Value("${GROQ_API_KEY}")
 private String apiKey;
 
     @PostMapping("/scan")
@@ -38,7 +38,7 @@ private String apiKey;
                .replace("\"", "\\\"");
            String json = """
 {
-  "model": "grok-3",
+  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
   "messages": [
     {
       "role": "user",
@@ -59,7 +59,7 @@ private String apiKey;
 }
 """.formatted(prompt.replace("\"", "'"), base64Image);
 
-            String url = "https://api.x.ai/v1/chat/completions";
+           String url = "https://api.groq.com/openai/v1/chat/completions";
 
             HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(url))

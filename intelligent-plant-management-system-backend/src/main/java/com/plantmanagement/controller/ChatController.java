@@ -17,8 +17,8 @@ import java.util.Map;
 })
 public class ChatController {
 
-    @Value("${XAI_API_KEY}")
-    private String apiKey;
+   @Value("${GROQ_API_KEY}")
+private String apiKey;
 
     @PostMapping("/ask")
     public Map<String, String> ask(@RequestBody Map<String, String> body) {
@@ -35,7 +35,7 @@ public class ChatController {
 
             String json = """
             {
-              "model": "grok-4",
+              "model": "llama-3.3-70b-versatile",
               "messages": [
                 {
                   "role": "system",
@@ -49,7 +49,7 @@ public class ChatController {
             }
             """.formatted(prompt.replace("\"", "'"));
 
-            String url = "https://api.x.ai/v1/chat/completions";
+            String url = "https://api.groq.com/openai/v1/chat/completions";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
