@@ -17,8 +17,8 @@ import java.util.Map;
 })
 public class PlantScanController {
 
-    @Value("${gemini.api.key}")
-    private String apiKey;
+    @Value("${XAI_API_KEY}")
+private String apiKey;
 
     @PostMapping("/scan")
     public Map<String, String> scanPlant(@RequestParam("file") MultipartFile file) {
@@ -38,32 +38,37 @@ public class PlantScanController {
                     - Tips to grow it better
                     """;
 
-            String json = """
-            {
-              "contents": [
-                {
-                  "parts": [
-                    { "text": "%s" },
-                    {
-                      "inline_data": {
-                        "mime_type": "image/jpeg",
-                        "data": "%s"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-            """.formatted(prompt.replace("\"", "'"), base64Image);
+           String json = """
+{
+  "model": "grok-3",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "%s"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,%s"
+          }
+        }
+      ]
+    }
+  ]
+}
+""".formatted(prompt.replace("\"", "'"), base64Image);
 
-            String url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key="
-                    + apiKey;
+            String url = "https://api.x.ai/v1/chat/completions";
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
+        .uri(URI.create(url))
+        .header("Content-Type", "application/json")
+        .header("Authorization", "Bearer " + apiKey)
+        .POST(HttpRequest.BodyPublishers.ofString(json))
+        .build();
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response =
@@ -72,7 +77,13 @@ public class PlantScanController {
             System.out.println("IMAGE SCAN RAW RESPONSE:");
             System.out.println(response.body());
 
-            return Map.of("answer", response.body());
+            System.out.println("STATUS: " + response.statusCode());
+System.out.println(response.body());
+
+return Map.of(
+    "answer",
+    "Status: " + response.statusCode() + "\n" + response.body()
+);
 
         } catch (Exception e) {
             e.printStackTrace();
