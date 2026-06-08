@@ -17,7 +17,7 @@ import java.util.Map;
 })
 public class ChatController {
 
-    @Value("${gemini.api.key}")
+    @Value("${XAI_API_KEY}")
     private String apiKey;
 
     @PostMapping("/ask")
@@ -30,37 +30,40 @@ public class ChatController {
                     You are FloraBot, a friendly plant expert.
                     Answer clearly and give helpful plant suggestions.
 
-                    User question: 
+                    User question:
                     """ + question;
 
             String json = """
             {
-              "contents": [
+              "model": "grok-4",
+              "messages": [
                 {
-                  "parts": [
-                    { "text": "%s" }
-                  ]
+                  "role": "system",
+                  "content": "You are FloraBot, a plant expert assistant."
+                },
+                {
+                  "role": "user",
+                  "content": "%s"
                 }
               ]
             }
             """.formatted(prompt.replace("\"", "'"));
 
-            // ⭐ Use an available model: gemini-2.0-flash
-            String url =
-                    "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key="
-                            + apiKey;
+            String url = "https://api.x.ai/v1/chat/completions";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + apiKey)
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
+
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("RAW GEMINI RESPONSE:");
+            System.out.println("RAW GROK RESPONSE:");
             System.out.println(response.body());
 
             return Map.of("answer", response.body());
