@@ -78,10 +78,7 @@ private String apiKey;
             System.out.println("STATUS: " + response.statusCode());
 System.out.println(response.body());
 
-return Map.of(
-    "answer",
-    "Status: " + response.statusCode() + "\n" + response.body()
-);
+return Map.of("answer", response.body());
 
         } catch (Exception e) {
             e.printStackTrace();

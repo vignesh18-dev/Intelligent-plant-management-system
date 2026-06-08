@@ -37,16 +37,18 @@ export default function PlantScanner() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      let raw = res.data.answer;
-      let text = "";
+   let raw = res.data.answer;
+let text = "";
 
-      try {
-        const parsed = JSON.parse(raw);
-        text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || raw;
-      } catch (e) {
-        text = raw;
-      }
+try {
+  const parsed = JSON.parse(raw);
 
+  text =
+    parsed?.choices?.[0]?.message?.content ||
+    "Unable to identify plant.";
+} catch (e) {
+  text = raw;
+}
       setResult(formatText(text));
     } catch (err) {
       console.error(err);
