@@ -27,17 +27,15 @@ private String apiKey;
             // Convert image → Base64
             String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
 
-            String prompt = """
-                    You are FloraBot, an expert plant identification AI.
-                    Identify this plant and also provide:
-                    - Plant name
-                    - Sunlight needs
-                    - Watering needs
-                    - Difficulty level
-                    - Common diseases
-                    - Tips to grow it better
-                    """;
+            String prompt =
+    "You are FloraBot, an expert plant identification AI. " +
+    "Identify this plant and provide: " +
+    "Plant name, Sunlight needs, Watering needs, Difficulty level, " +
+    "Common diseases, and Tips to grow it better.";
 
+    prompt = prompt.replace("\n", " ")
+               .replace("\r", " ")
+               .replace("\"", "\\\"");
            String json = """
 {
   "model": "grok-3",
