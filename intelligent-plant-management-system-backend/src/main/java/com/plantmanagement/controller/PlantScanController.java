@@ -2,6 +2,8 @@ package com.plantmanagement.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,8 @@ import java.util.Map;
     "https://plant-management-frontend-m7hg.onrender.com"
 })
 public class PlantScanController {
+
+    private static final Logger log = LoggerFactory.getLogger(PlantScanController.class);
 
     @Value("${GROQ_API_KEY}")
 private String apiKey;
@@ -74,18 +78,22 @@ private String apiKey;
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            log.info("Groq Vision API response status: {}", response.statusCode());
+
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.body());
 
             String answer = "AI image scan error.";
             if (root.has("choices") && root.get("choices").isArray() && root.get("choices").size() > 0) {
                 answer = root.get("choices").get(0).get("message").get("content").asText();
+            } else {
+                log.error("Groq Vision API returned unexpected response: {}", response.body());
             }
 
             return Map.of("answer", answer);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error during plant scan", e);
             return Map.of("answer", "AI image scan error.");
         }
     }

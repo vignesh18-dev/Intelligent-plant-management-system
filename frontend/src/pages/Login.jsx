@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Auth.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,11 +36,11 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-box" onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <form className="auth-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        {error && <p className="error">{error}</p>}
+        {error && <p className="auth-message">{error}</p>}
 
         <input
           type="email"
@@ -58,6 +59,10 @@ export default function Login() {
         />
 
         <button className="btn">Login</button>
+
+        <p className="auth-switch">
+          Don't have an account? <Link to="/register">Sign Up</Link>
+        </p>
       </form>
     </div>
   );

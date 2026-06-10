@@ -81,6 +81,10 @@ const userId = user?.userId;
     try {
       await api.post("/api/orders/place", orderData);
 
+      // Clear local cart state immediately
+      setCart([]);
+      setTotal(0);
+
       alert("🎉 Order placed successfully!");
 
       navigate("/orders");

@@ -37,21 +37,11 @@ export default function PlantScanner() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-   let raw = res.data.answer;
-let text = "";
-
-try {
-  const parsed = JSON.parse(raw);
-
-  text =
-    parsed?.choices?.[0]?.message?.content ||
-    "Unable to identify plant.";
-} catch (e) {
-  text = raw;
-}
+      // Backend already parses the Groq response and returns plain text in "answer"
+      const text = res.data.answer || "Unable to identify plant.";
       setResult(formatText(text));
     } catch (err) {
-      console.error(err);
+      console.error("Plant scan error:", err);
       setResult("❌ Error scanning image.");
     }
 
