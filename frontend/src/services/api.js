@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:"https://plant-management-app-0jp3.onrender.com",
+  baseURL: import.meta.env.VITE_API_URL || "https://plant-management-app-0jp3.onrender.com",
   headers: { "Content-Type": "application/json" }
 });
 

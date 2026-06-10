@@ -13,9 +13,11 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository repo;
+    private final CartService cartService;
 
-    public OrderService(OrderRepository repo) {
+    public OrderService(OrderRepository repo, CartService cartService) {
         this.repo = repo;
+        this.cartService = cartService;
     }
 
     public Order placeOrder(OrderRequestDto dto) {
@@ -36,7 +38,12 @@ public class OrderService {
 
         order.setItems(items);
 
-        return repo.save(order);
+        Order savedOrder = repo.save(order);
+        
+        // Clear the user's cart after successfully placing the order
+        cartService.clearCart(dto.getUserId());
+        
+        return savedOrder;
     }
 
     public List<Order> getOrdersByUser(Long userId) {

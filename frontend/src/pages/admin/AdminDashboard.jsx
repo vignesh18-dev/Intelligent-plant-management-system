@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 export default function AdminDashboard() {
   const [plantsCount, setPlantsCount] = useState(0);
@@ -15,17 +16,11 @@ export default function AdminDashboard() {
 
   const loadCounts = async () => {
     try {
-      const plantsRes = await fetch(
-        "https://plant-management-app-0jp3.onrender.com/api/plants"
-      );
-      const plantsData = await plantsRes.json();
-      setPlantsCount(plantsData.length);
+      const plantsRes = await api.get("/api/plants");
+      setPlantsCount(plantsRes.data.length);
 
-      const ordersRes = await fetch(
-        "https://plant-management-app-0jp3.onrender.com/api/orders/admin/all"
-      );
-      const ordersData = await ordersRes.json();
-      setOrdersCount(ordersData.length);
+      const ordersRes = await api.get("/api/orders/admin/all");
+      setOrdersCount(ordersRes.data.length);
     } catch (error) {
       console.error("Error loading dashboard data:", error);
     }
@@ -33,11 +28,8 @@ export default function AdminDashboard() {
 
   const loadLatestOrders = async () => {
     try {
-      const res = await fetch(
-        "https://plant-management-app-0jp3.onrender.com/api/orders/admin/all"
-      );
-
-      const data = await res.json();
+      const res = await api.get("/api/orders/admin/all");
+      const data = res.data;
 
       setLatestOrders(Array.isArray(data) ? data.slice(-5).reverse() : []);
     } catch (error) {

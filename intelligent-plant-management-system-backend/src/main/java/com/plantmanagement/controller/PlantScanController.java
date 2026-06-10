@@ -1,5 +1,7 @@
 package com.plantmanagement.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +40,7 @@ private String apiKey;
                .replace("\"", "\\\"");
            String json = """
 {
-  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+  "model": "llama-3.2-11b-vision-preview",
   "messages": [
     {
       "role": "user",
@@ -72,13 +74,15 @@ private String apiKey;
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("IMAGE SCAN RAW RESPONSE:");
-            System.out.println(response.body());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.body());
 
-            System.out.println("STATUS: " + response.statusCode());
-System.out.println(response.body());
+            String answer = "AI image scan error.";
+            if (root.has("choices") && root.get("choices").isArray() && root.get("choices").size() > 0) {
+                answer = root.get("choices").get(0).get("message").get("content").asText();
+            }
 
-return Map.of("answer", response.body());
+            return Map.of("answer", answer);
 
         } catch (Exception e) {
             e.printStackTrace();

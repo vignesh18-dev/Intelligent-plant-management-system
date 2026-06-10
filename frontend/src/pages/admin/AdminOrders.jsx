@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -9,11 +10,8 @@ export default function AdminOrders() {
 
   const loadOrders = async () => {
     try {
-      const res = await fetch(
-        "https://plant-management-app-0jp3.onrender.com/api/orders/admin/all"
-      );
-
-      const data = await res.json();
+      const res = await api.get("/api/orders/admin/all");
+      const data = res.data;
 
       setOrders(Array.isArray(data) ? data : []);
     } catch (err) {

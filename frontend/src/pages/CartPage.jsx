@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -20,11 +21,8 @@ const userId = user?.userId;
     }
 
     try {
-      const res = await fetch(
-        `https://plant-management-app-0jp3.onrender.com/api/cart/${userId}`
-      );
-
-      const data = await res.json();
+      const res = await api.get(`/api/cart/${userId}`);
+      const data = res.data;
 
       const cartItems = Array.isArray(data) ? data : [];
 
@@ -49,18 +47,7 @@ const userId = user?.userId;
     if (newQty < 1) return;
 
     try {
-      await fetch(
-        `https://plant-management-app-0jp3.onrender.com/api/cart/update/${itemId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            quantity: newQty,
-          }),
-        }
-      );
+      await api.put(`/api/cart/update/${itemId}`, { quantity: newQty });
 
       loadCart();
     } catch (err) {
@@ -70,12 +57,7 @@ const userId = user?.userId;
 
   const removeItem = async (itemId) => {
     try {
-      await fetch(
-        `https://plant-management-app-0jp3.onrender.com/api/cart/remove/${itemId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await api.delete(`/api/cart/remove/${itemId}`);
 
       loadCart();
     } catch (err) {
@@ -97,29 +79,9 @@ const userId = user?.userId;
     };
 
     try {
-      const res = await fetch(
-        "https://plant-management-app-0jp3.onrender.com/api/orders/place",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to place order");
-      }
+      await api.post("/api/orders/place", orderData);
 
       alert("🎉 Order placed successfully!");
-
-      await fetch(
-        `https://plant-management-app-0jp3.onrender.com/api/cart/clear/${userId}`,
-        {
-          method: "DELETE",
-        }
-      );
 
       navigate("/orders");
     } catch (err) {

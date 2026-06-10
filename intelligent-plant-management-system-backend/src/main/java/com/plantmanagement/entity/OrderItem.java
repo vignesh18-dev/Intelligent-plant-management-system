@@ -2,6 +2,7 @@ package com.plantmanagement.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "order_items")
@@ -17,12 +18,10 @@ public class OrderItem {
 
     private BigDecimal price;
 
-    import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@ManyToOne
-@JoinColumn(name = "order_id")
-@JsonIgnore
-private Order order;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private Order order;
 
     public OrderItem() {}
 

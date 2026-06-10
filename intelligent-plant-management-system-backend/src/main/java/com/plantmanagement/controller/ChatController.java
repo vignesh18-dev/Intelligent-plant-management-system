@@ -1,5 +1,7 @@
 package com.plantmanagement.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ private String apiKey;
 
         try {
             String question = body.get("question");
+            if (question == null) question = "";
 
             String prompt = """
                     You are FloraBot, a friendly plant expert.
@@ -47,7 +50,7 @@ private String apiKey;
                 }
               ]
             }
-            """.formatted(prompt.replace("\"", "'"));
+            """.formatted(prompt.replace("\"", "'").replace("\n", " ").replace("\r", " "));
 
             String url = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -63,12 +66,15 @@ private String apiKey;
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("RAW GROK RESPONSE:");
-            System.out.println(response.body());
-            System.out.println("CHAT STATUS: " + response.statusCode());
-System.out.println("CHAT RESPONSE: " + response.body());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.body());
+            
+            String answer = "AI error occurred.";
+            if (root.has("choices") && root.get("choices").isArray() && root.get("choices").size() > 0) {
+                answer = root.get("choices").get(0).get("message").get("content").asText();
+            }
 
-            return Map.of("answer", response.body());
+            return Map.of("answer", answer);
 
         } catch (Exception e) {
             e.printStackTrace();
