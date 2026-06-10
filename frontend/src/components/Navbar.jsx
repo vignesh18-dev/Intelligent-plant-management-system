@@ -1,48 +1,51 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-
 export default function Navbar() {
-  const { user, isLoggedIn, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleLogout = () => {
     logout();
+    localStorage.removeItem("user");
     navigate("/");
   };
+
+  // Hide navbar on login and register pages
+  if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register") {
+    return null;
+  }
 
   return (
     <header className="navbar">
       <h1 className="logo">🌿 FloraConnect</h1>
 
       <nav>
-        {!isLoggedIn && (
-          <>
-            <Link to="/">Login</Link>
-            <Link to="/register">Sign Up</Link>
-          </>
-        )}
-
-        {isLoggedIn && user?.role === "ADMIN" && (
+        {user?.role === "ADMIN" && (
           <>
             <Link to="/admin/home">Home</Link>
             <Link to="/admin/addproduct">Add Product</Link>
             <Link to="/admin/adminproduct">Admin Product</Link>
             <Link to="/admin/admindashboard">Dashboard</Link>
+
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
           </>
         )}
 
-        {isLoggedIn && user?.role === "CLIENT" && (
+        {user?.role === "CLIENT" && (
           <>
             <Link to="/home">Home</Link>
             <Link to="/plants">Plants</Link>
             <Link to="/cart">Cart</Link>
             <Link to="/orders">Orders</Link>
             <Link to="/scan">Plant Scanner</Link>
+
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
