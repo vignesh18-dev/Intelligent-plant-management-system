@@ -65,6 +65,8 @@ private String apiKey;
 
             System.out.println("RAW GROK RESPONSE:");
             System.out.println(response.body());
+            System.out.println("CHAT STATUS: " + response.statusCode());
+System.out.println("CHAT RESPONSE: " + response.body());
 
             return Map.of("answer", response.body());
 
