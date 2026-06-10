@@ -17,9 +17,12 @@ public class OrderItem {
 
     private BigDecimal price;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@ManyToOne
+@JoinColumn(name = "order_id")
+@JsonIgnore
+private Order order;
 
     public OrderItem() {}
 
